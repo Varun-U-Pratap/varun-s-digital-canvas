@@ -86,33 +86,45 @@ const AboutSection = () => {
           {/* Education Timeline */}
           <motion.div variants={itemVariants}>
             <div className="glass-card p-8">
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mb-8">
                 <div className="p-3 rounded-lg bg-primary/10">
                   <GraduationCap className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold">Education</h3>
+                <h3 className="text-xl font-semibold">Education Timeline</h3>
               </div>
 
-              <div className="relative pl-8 border-l-2 border-primary/30">
-                <div className="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-primary" />
-                
-                <div className="pb-8">
-                  <h4 className="text-lg font-semibold mb-1">
-                    Bachelor of Engineering
-                  </h4>
-                  <p className="text-primary font-medium mb-2">
-                    Computer Science & Engineering
-                  </p>
-                  <p className="text-muted-foreground mb-3">
-                    Ramaiah Institute of Technology
-                  </p>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Calendar className="w-4 h-4" />
-                    <span>2024 – 2028</span>
+              <div className="relative pl-8 border-l-2 border-primary/30 space-y-8">
+                {/* BE - Current */}
+                <div className="relative">
+                  <div className="absolute left-[-33px] top-1 w-4 h-4 rounded-full bg-primary shadow-[0_0_12px_hsl(var(--primary)/0.5)]" />
+                  <div>
+                    <div className="flex items-center gap-2 text-xs text-primary font-medium mb-1">
+                      <Calendar className="w-3 h-3" />
+                      <span>2024 – 2028</span>
+                    </div>
+                    <h4 className="text-lg font-semibold">BE in Computer Science & Engineering</h4>
+                    <p className="text-muted-foreground">Ramaiah Institute of Technology</p>
+                    <span className="inline-block mt-2 px-2 py-0.5 rounded text-xs bg-primary/10 text-primary">Current</span>
                   </div>
                 </div>
 
-                <div className="absolute left-[-9px] bottom-0 w-4 h-4 rounded-full bg-primary/30 border-2 border-primary" />
+                {/* Pre-University */}
+                <div className="relative">
+                  <div className="absolute left-[-33px] top-1 w-4 h-4 rounded-full bg-secondary border-2 border-primary/50" />
+                  <div>
+                    <h4 className="text-lg font-semibold">Pre-University</h4>
+                    <p className="text-muted-foreground">SRS PU College, Chitradurga</p>
+                  </div>
+                </div>
+
+                {/* Schooling */}
+                <div className="relative">
+                  <div className="absolute left-[-33px] top-1 w-4 h-4 rounded-full bg-secondary border-2 border-primary/50" />
+                  <div>
+                    <h4 className="text-lg font-semibold">Schooling</h4>
+                    <p className="text-muted-foreground">Don Bosco School, Chitradurga</p>
+                  </div>
+                </div>
               </div>
 
               {/* Quick Stats */}
