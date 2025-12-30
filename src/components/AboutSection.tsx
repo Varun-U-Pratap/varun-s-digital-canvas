@@ -109,8 +109,8 @@ const AboutSection = () => {
                         <Calendar className="w-3 h-3" />
                         <span>2024 – 2028</span>
                       </div>
-                      <h4 className="text-base font-semibold">BE in Computer Science & Engineering</h4>
-                      <p className="text-sm text-muted-foreground">Ramaiah Institute of Technology</p>
+                      <h4 className="text-base font-semibold">Ramaiah Institute of Technology</h4>
+                      <p className="text-sm text-muted-foreground">BE in Computer Science & Engineering</p>
                       <span className="inline-block mt-2 px-2 py-0.5 rounded text-xs bg-primary/10 text-primary font-medium">Current</span>
                     </div>
                   </div>
@@ -121,8 +121,8 @@ const AboutSection = () => {
                       <div className="w-4 h-4 rounded-full bg-card border-2 border-primary/60" />
                     </div>
                     <div className="pb-2">
-                      <h4 className="text-base font-semibold">Pre-University</h4>
-                      <p className="text-sm text-muted-foreground">SRS PU College, Chitradurga</p>
+                      <h4 className="text-base font-semibold">SRS PU College, Chitradurga</h4>
+                      <p className="text-sm text-muted-foreground">Pre-University</p>
                     </div>
                   </div>
 
@@ -132,8 +132,8 @@ const AboutSection = () => {
                       <div className="w-4 h-4 rounded-full bg-card border-2 border-primary/40" />
                     </div>
                     <div>
-                      <h4 className="text-base font-semibold">Schooling</h4>
-                      <p className="text-sm text-muted-foreground">Don Bosco School, Chitradurga</p>
+                      <h4 className="text-base font-semibold">Don Bosco School, Chitradurga</h4>
+                      <p className="text-sm text-muted-foreground">Schooling</p>
                     </div>
                   </div>
                 </div>
