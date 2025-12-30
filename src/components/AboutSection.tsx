@@ -93,36 +93,48 @@ const AboutSection = () => {
                 <h3 className="text-xl font-semibold">Education Timeline</h3>
               </div>
 
-              <div className="relative pl-8 border-l-2 border-primary/30 space-y-8">
-                {/* BE - Current */}
-                <div className="relative">
-                  <div className="absolute left-[-33px] top-1 w-4 h-4 rounded-full bg-primary shadow-[0_0_12px_hsl(var(--primary)/0.5)]" />
-                  <div>
-                    <div className="flex items-center gap-2 text-xs text-primary font-medium mb-1">
-                      <Calendar className="w-3 h-3" />
-                      <span>2024 – 2028</span>
+              <div className="relative">
+                {/* Timeline line */}
+                <div className="absolute left-[7px] top-2 bottom-2 w-0.5 bg-gradient-to-b from-primary via-primary/50 to-primary/20" />
+                
+                {/* Timeline items */}
+                <div className="space-y-6">
+                  {/* BE - Current */}
+                  <div className="flex gap-4">
+                    <div className="relative flex-shrink-0">
+                      <div className="w-4 h-4 rounded-full bg-primary shadow-[0_0_12px_hsl(var(--primary)/0.6)]" />
                     </div>
-                    <h4 className="text-lg font-semibold">BE in Computer Science & Engineering</h4>
-                    <p className="text-muted-foreground">Ramaiah Institute of Technology</p>
-                    <span className="inline-block mt-2 px-2 py-0.5 rounded text-xs bg-primary/10 text-primary">Current</span>
+                    <div className="pb-2">
+                      <div className="flex items-center gap-2 text-xs text-primary font-medium mb-1">
+                        <Calendar className="w-3 h-3" />
+                        <span>2024 – 2028</span>
+                      </div>
+                      <h4 className="text-base font-semibold">BE in Computer Science & Engineering</h4>
+                      <p className="text-sm text-muted-foreground">Ramaiah Institute of Technology</p>
+                      <span className="inline-block mt-2 px-2 py-0.5 rounded text-xs bg-primary/10 text-primary font-medium">Current</span>
+                    </div>
                   </div>
-                </div>
 
-                {/* Pre-University */}
-                <div className="relative">
-                  <div className="absolute left-[-33px] top-1 w-4 h-4 rounded-full bg-secondary border-2 border-primary/50" />
-                  <div>
-                    <h4 className="text-lg font-semibold">Pre-University</h4>
-                    <p className="text-muted-foreground">SRS PU College, Chitradurga</p>
+                  {/* Pre-University */}
+                  <div className="flex gap-4">
+                    <div className="relative flex-shrink-0">
+                      <div className="w-4 h-4 rounded-full bg-card border-2 border-primary/60" />
+                    </div>
+                    <div className="pb-2">
+                      <h4 className="text-base font-semibold">Pre-University</h4>
+                      <p className="text-sm text-muted-foreground">SRS PU College, Chitradurga</p>
+                    </div>
                   </div>
-                </div>
 
-                {/* Schooling */}
-                <div className="relative">
-                  <div className="absolute left-[-33px] top-1 w-4 h-4 rounded-full bg-secondary border-2 border-primary/50" />
-                  <div>
-                    <h4 className="text-lg font-semibold">Schooling</h4>
-                    <p className="text-muted-foreground">Don Bosco School, Chitradurga</p>
+                  {/* Schooling */}
+                  <div className="flex gap-4">
+                    <div className="relative flex-shrink-0">
+                      <div className="w-4 h-4 rounded-full bg-card border-2 border-primary/40" />
+                    </div>
+                    <div>
+                      <h4 className="text-base font-semibold">Schooling</h4>
+                      <p className="text-sm text-muted-foreground">Don Bosco School, Chitradurga</p>
+                    </div>
                   </div>
                 </div>
               </div>
