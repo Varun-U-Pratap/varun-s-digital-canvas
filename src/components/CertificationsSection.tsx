@@ -1,7 +1,12 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef } from "react";
-import { Award, ExternalLink, GraduationCap } from "lucide-react";
+import { useRef, useState } from "react";
+import { Award, GraduationCap, X } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+
+import cs50xCert from "@/assets/certificates/cs50x.png";
+import cs50pCert from "@/assets/certificates/cs50p.png";
+import aiVerseCert from "@/assets/certificates/ai-verse.jpeg";
 
 const certifications = [
   {
@@ -11,6 +16,7 @@ const certifications = [
     icon: "🎓",
     color: "border-l-red-500",
     bgGlow: "bg-red-500/10",
+    image: cs50xCert,
   },
   {
     id: 2,
@@ -19,20 +25,23 @@ const certifications = [
     icon: "🐍",
     color: "border-l-amber-500",
     bgGlow: "bg-amber-500/10",
+    image: cs50pCert,
   },
   {
     id: 3,
     title: "Into the AI Verse",
-    institution: "Online Course",
+    institution: "IEEE CIS Chapter",
     icon: "🤖",
     color: "border-l-violet-500",
     bgGlow: "bg-violet-500/10",
+    image: aiVerseCert,
   },
 ];
 
 const CertificationsSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [selectedCert, setSelectedCert] = useState<typeof certifications[0] | null>(null);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -77,7 +86,8 @@ const CertificationsSection = () => {
               key={cert.id}
               variants={itemVariants}
               whileHover={{ x: 8 }}
-              className={`glass-card p-6 border-l-4 ${cert.color} relative overflow-hidden group cursor-default`}
+              onClick={() => setSelectedCert(cert)}
+              className={`glass-card p-6 border-l-4 ${cert.color} relative overflow-hidden group cursor-pointer`}
             >
               {/* Background Glow on Hover */}
               <div className={`absolute inset-0 ${cert.bgGlow} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
@@ -100,7 +110,7 @@ const CertificationsSection = () => {
                 {/* Badge */}
                 <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm">
                   <Award className="w-4 h-4" />
-                  <span>Certified</span>
+                  <span>View</span>
                 </div>
               </div>
             </motion.div>
@@ -119,6 +129,34 @@ const CertificationsSection = () => {
           </div>
         </motion.div>
       </motion.div>
+
+      {/* Certificate Preview Dialog */}
+      <Dialog open={!!selectedCert} onOpenChange={() => setSelectedCert(null)}>
+        <DialogContent className="max-w-4xl w-[95vw] p-2 sm:p-4 bg-background/95 backdrop-blur-xl">
+          <DialogTitle className="sr-only">
+            {selectedCert?.title} Certificate
+          </DialogTitle>
+          <button
+            onClick={() => setSelectedCert(null)}
+            className="absolute right-3 top-3 z-10 p-2 rounded-full bg-background/80 hover:bg-background transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+          {selectedCert && (
+            <div className="relative w-full">
+              <img
+                src={selectedCert.image}
+                alt={`${selectedCert.title} Certificate`}
+                className="w-full h-auto rounded-lg shadow-2xl"
+              />
+              <div className="mt-4 text-center">
+                <h3 className="text-lg font-semibold">{selectedCert.title}</h3>
+                <p className="text-sm text-muted-foreground">{selectedCert.institution}</p>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
