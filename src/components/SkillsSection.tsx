@@ -5,54 +5,37 @@ import {
   Smartphone, 
   Code2, 
   Brain, 
-  Wrench,
-  Zap
+  Wrench
 } from "lucide-react";
 
 const skillCategories = [
   {
     title: "Mobile Development",
     icon: Smartphone,
-    color: "text-cyan-400",
-    bgColor: "bg-cyan-400/10",
-    skills: [
-      { name: "Flutter", level: 85 },
-      { name: "Dart", level: 80 },
-    ],
+    color: "text-primary",
+    bgColor: "bg-primary/10",
+    skills: ["Flutter", "Dart"],
   },
   {
     title: "Programming",
     icon: Code2,
-    color: "text-violet-400",
-    bgColor: "bg-violet-400/10",
-    skills: [
-      { name: "Python", level: 70 },
-      { name: "Dart", level: 80 },
-      { name: "DSA", level: 50, learning: true },
-    ],
+    color: "text-primary",
+    bgColor: "bg-primary/10",
+    skills: ["Python", "Dart", "DSA"],
   },
   {
     title: "AI / ML",
     icon: Brain,
-    color: "text-pink-400",
-    bgColor: "bg-pink-400/10",
-    skills: [
-      { name: "AI Fundamentals", level: 55, learning: true },
-      { name: "ML Basics", level: 45, learning: true },
-    ],
+    color: "text-primary",
+    bgColor: "bg-primary/10",
+    skills: ["AI Fundamentals", "ML Basics"],
   },
   {
     title: "Tools & Technologies",
     icon: Wrench,
-    color: "text-amber-400",
-    bgColor: "bg-amber-400/10",
-    skills: [
-      { name: "Git", level: 75 },
-      { name: "GitHub", level: 80 },
-      { name: "Linux", level: 60 },
-      { name: "VS Code", level: 90 },
-      { name: "Cursor AI", level: 70 },
-    ],
+    color: "text-primary",
+    bgColor: "bg-primary/10",
+    skills: ["Git", "GitHub", "Linux", "VS Code", "Cursor AI"],
   },
 ];
 
@@ -115,32 +98,14 @@ const SkillsSection = () => {
                 </div>
 
                 {/* Skills List */}
-                <div className="space-y-4">
+                <div className="flex flex-wrap gap-2">
                   {category.skills.map((skill) => (
-                    <div key={skill.name} className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium">{skill.name}</span>
-                          {skill.learning && (
-                            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs">
-                              <Zap className="w-3 h-3" />
-                              Learning
-                            </span>
-                          )}
-                        </div>
-                        <span className="text-xs text-muted-foreground">{skill.level}%</span>
-                      </div>
-                      
-                      {/* Progress Bar */}
-                      <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={isInView ? { width: `${skill.level}%` } : { width: 0 }}
-                          transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-                          className="h-full rounded-full bg-gradient-to-r from-primary to-accent"
-                        />
-                      </div>
-                    </div>
+                    <span
+                      key={skill}
+                      className="px-3 py-1.5 rounded-lg bg-secondary text-sm font-medium hover:bg-primary/20 hover:text-primary transition-colors"
+                    >
+                      {skill}
+                    </span>
                   ))}
                 </div>
               </motion.div>
