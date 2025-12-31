@@ -302,7 +302,7 @@ const DSASection = () => {
                     <span className="text-sm text-muted-foreground">Problems Solved</span>
                   </div>
                   <span className="text-4xl font-bold text-[#2F8D46]">
-                    <CountUp end={180} />
+                    <CountUp end={20} />
                   </span>
                 </div>
 
@@ -310,19 +310,19 @@ const DSASection = () => {
                 <div className="grid grid-cols-3 gap-3 mb-6">
                   <div className="text-center p-3 rounded-xl bg-green-500/10 border border-green-500/20">
                     <span className="text-2xl font-bold text-green-400">
-                      <CountUp end={95} />
+                      <CountUp end={18} />
                     </span>
                     <p className="text-xs text-muted-foreground mt-1">Easy</p>
                   </div>
                   <div className="text-center p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
                     <span className="text-2xl font-bold text-yellow-400">
-                      <CountUp end={70} />
+                      <CountUp end={2} />
                     </span>
                     <p className="text-xs text-muted-foreground mt-1">Medium</p>
                   </div>
                   <div className="text-center p-3 rounded-xl bg-red-500/10 border border-red-500/20">
                     <span className="text-2xl font-bold text-red-400">
-                      <CountUp end={15} />
+                      <CountUp end={0} />
                     </span>
                     <p className="text-xs text-muted-foreground mt-1">Hard</p>
                   </div>
