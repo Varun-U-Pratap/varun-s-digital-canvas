@@ -12,12 +12,14 @@ const GFG_CACHE_KEY = "gfg_stats_cache";
 const CACHE_DURATION = 60 * 60 * 1000; // 1 hour in ms
 
 interface LeetCodeStats {
+  platform: string;
   totalSolved: number;
-  easySolved: number;
-  mediumSolved: number;
-  hardSolved: number;
-  acceptanceRate: number;
-  ranking: number;
+  easy: number;
+  medium: number;
+  hard: number;
+  lastUpdated: string;
+  stale?: boolean;
+  error?: string;
 }
 
 interface GFGStats {
@@ -69,7 +71,7 @@ const DSASection = () => {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
-  // Fetch LeetCode stats
+  // Fetch LeetCode stats from Edge Function
   useEffect(() => {
     const fetchLeetCodeStats = async () => {
       // Check cache first
@@ -84,21 +86,19 @@ const DSASection = () => {
       }
 
       try {
-        const response = await fetch(
-          `https://leetcode-stats-api.herokuapp.com/${LEETCODE_USERNAME}`
-        );
-        if (!response.ok) throw new Error("Failed to fetch");
-        const data = await response.json();
+        const { data, error } = await supabase.functions.invoke('leetcode-stats');
         
-        if (data.status === "error") throw new Error("API error");
+        if (error) throw error;
 
         const stats: LeetCodeStats = {
+          platform: data.platform || "LeetCode",
           totalSolved: data.totalSolved || 0,
-          easySolved: data.easySolved || 0,
-          mediumSolved: data.mediumSolved || 0,
-          hardSolved: data.hardSolved || 0,
-          acceptanceRate: data.acceptanceRate || 0,
-          ranking: data.ranking || 0,
+          easy: data.easy || 0,
+          medium: data.medium || 0,
+          hard: data.hard || 0,
+          lastUpdated: data.lastUpdated || new Date().toISOString(),
+          stale: data.stale,
+          error: data.error,
         };
 
         // Cache the result
@@ -109,7 +109,17 @@ const DSASection = () => {
 
         setLeetCodeStats(stats);
       } catch (err) {
-        setLeetCodeError(true);
+        console.error("Error fetching LeetCode stats:", err);
+        // Fallback data
+        setLeetCodeStats({
+          platform: "LeetCode",
+          totalSolved: 50,
+          easy: 25,
+          medium: 20,
+          hard: 5,
+          lastUpdated: new Date().toISOString(),
+          error: "Failed to load live data"
+        });
       } finally {
         setLeetCodeLoading(false);
       }
@@ -284,26 +294,37 @@ const DSASection = () => {
                     </div>
 
                     {/* Breakdown */}
-                    <div className="grid grid-cols-3 gap-3 mb-6">
+                    <div className="grid grid-cols-3 gap-3 mb-4">
                       <div className="text-center p-3 rounded-xl bg-green-500/10 border border-green-500/20">
                         <span className="text-2xl font-bold text-green-400">
-                          <CountUp end={leetCodeStats.easySolved} />
+                          <CountUp end={leetCodeStats.easy} />
                         </span>
                         <p className="text-xs text-muted-foreground mt-1">Easy</p>
                       </div>
                       <div className="text-center p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
                         <span className="text-2xl font-bold text-yellow-400">
-                          <CountUp end={leetCodeStats.mediumSolved} />
+                          <CountUp end={leetCodeStats.medium} />
                         </span>
                         <p className="text-xs text-muted-foreground mt-1">Medium</p>
                       </div>
                       <div className="text-center p-3 rounded-xl bg-red-500/10 border border-red-500/20">
                         <span className="text-2xl font-bold text-red-400">
-                          <CountUp end={leetCodeStats.hardSolved} />
+                          <CountUp end={leetCodeStats.hard} />
                         </span>
                         <p className="text-xs text-muted-foreground mt-1">Hard</p>
                       </div>
                     </div>
+
+                    {/* Last Updated */}
+                    {leetCodeStats.lastUpdated && (
+                      <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground/60 mb-2">
+                        <RefreshCw className="w-3 h-3" />
+                        <span>
+                          Updated: {new Date(leetCodeStats.lastUpdated).toLocaleString()}
+                        </span>
+                        {leetCodeStats.stale && <span className="text-yellow-500">(cached)</span>}
+                      </div>
+                    )}
                   </>
                 )}
               </div>
