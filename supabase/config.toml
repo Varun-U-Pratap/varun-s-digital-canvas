@@ -1,0 +1,4 @@
+project_id = "rkfszybefmzhbqkbgwis"
+
+[functions.gfg-stats]
+verify_jwt = false
