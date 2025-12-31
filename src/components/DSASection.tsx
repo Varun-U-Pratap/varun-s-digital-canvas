@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { ExternalLink, Code2, Trophy, Target, Zap } from "lucide-react";
+import { ExternalLink, Code2, Trophy, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const LEETCODE_USERNAME = "upratapvarun";
@@ -157,12 +157,12 @@ const DSASection = () => {
           {/* LeetCode Card */}
           <motion.div
             variants={cardVariants}
-            className="glass-card glass-card-hover p-6 rounded-2xl relative overflow-hidden group"
+            className="glass-card glass-card-hover p-6 rounded-2xl relative overflow-hidden group flex flex-col"
           >
             {/* Glow effect */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#FFA116]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-            <div className="relative z-10">
+            <div className="relative z-10 flex flex-col flex-1">
               {/* Header */}
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-[#FFA116]/10 flex items-center justify-center">
@@ -181,56 +181,58 @@ const DSASection = () => {
               </div>
 
               {/* Stats */}
-              {loading ? (
-                <div className="space-y-4 animate-pulse">
-                  <div className="h-16 bg-muted/20 rounded-lg" />
-                  <div className="grid grid-cols-3 gap-3">
-                    <div className="h-20 bg-muted/20 rounded-lg" />
-                    <div className="h-20 bg-muted/20 rounded-lg" />
-                    <div className="h-20 bg-muted/20 rounded-lg" />
-                  </div>
-                </div>
-              ) : error ? (
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground mb-2">Unable to load stats</p>
-                  <p className="text-sm text-muted-foreground/60">Please check back later</p>
-                </div>
-              ) : leetCodeStats && (
-                <>
-                  {/* Total Solved */}
-                  <div className="text-center py-4 mb-4 rounded-xl bg-muted/10 border border-border/50">
-                    <div className="flex items-center justify-center gap-2 mb-1">
-                      <Trophy className="w-5 h-5 text-[#FFA116]" />
-                      <span className="text-sm text-muted-foreground">Problems Solved</span>
+              <div className="flex-1">
+                {loading ? (
+                  <div className="space-y-4 animate-pulse">
+                    <div className="h-16 bg-muted/20 rounded-lg" />
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="h-20 bg-muted/20 rounded-lg" />
+                      <div className="h-20 bg-muted/20 rounded-lg" />
+                      <div className="h-20 bg-muted/20 rounded-lg" />
                     </div>
-                    <span className="text-4xl font-bold gradient-text">
-                      <CountUp end={leetCodeStats.totalSolved} />
-                    </span>
                   </div>
+                ) : error ? (
+                  <div className="text-center py-8">
+                    <p className="text-muted-foreground mb-2">Unable to load stats</p>
+                    <p className="text-sm text-muted-foreground/60">Please check back later</p>
+                  </div>
+                ) : leetCodeStats && (
+                  <>
+                    {/* Total Solved */}
+                    <div className="text-center py-4 mb-4 rounded-xl bg-muted/10 border border-border/50">
+                      <div className="flex items-center justify-center gap-2 mb-1">
+                        <Trophy className="w-5 h-5 text-[#FFA116]" />
+                        <span className="text-sm text-muted-foreground">Problems Solved</span>
+                      </div>
+                      <span className="text-4xl font-bold gradient-text">
+                        <CountUp end={leetCodeStats.totalSolved} />
+                      </span>
+                    </div>
 
-                  {/* Breakdown */}
-                  <div className="grid grid-cols-3 gap-3 mb-6">
-                    <div className="text-center p-3 rounded-xl bg-green-500/10 border border-green-500/20">
-                      <span className="text-2xl font-bold text-green-400">
-                        <CountUp end={leetCodeStats.easySolved} />
-                      </span>
-                      <p className="text-xs text-muted-foreground mt-1">Easy</p>
+                    {/* Breakdown */}
+                    <div className="grid grid-cols-3 gap-3 mb-6">
+                      <div className="text-center p-3 rounded-xl bg-green-500/10 border border-green-500/20">
+                        <span className="text-2xl font-bold text-green-400">
+                          <CountUp end={leetCodeStats.easySolved} />
+                        </span>
+                        <p className="text-xs text-muted-foreground mt-1">Easy</p>
+                      </div>
+                      <div className="text-center p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
+                        <span className="text-2xl font-bold text-yellow-400">
+                          <CountUp end={leetCodeStats.mediumSolved} />
+                        </span>
+                        <p className="text-xs text-muted-foreground mt-1">Medium</p>
+                      </div>
+                      <div className="text-center p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+                        <span className="text-2xl font-bold text-red-400">
+                          <CountUp end={leetCodeStats.hardSolved} />
+                        </span>
+                        <p className="text-xs text-muted-foreground mt-1">Hard</p>
+                      </div>
                     </div>
-                    <div className="text-center p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
-                      <span className="text-2xl font-bold text-yellow-400">
-                        <CountUp end={leetCodeStats.mediumSolved} />
-                      </span>
-                      <p className="text-xs text-muted-foreground mt-1">Medium</p>
-                    </div>
-                    <div className="text-center p-3 rounded-xl bg-red-500/10 border border-red-500/20">
-                      <span className="text-2xl font-bold text-red-400">
-                        <CountUp end={leetCodeStats.hardSolved} />
-                      </span>
-                      <p className="text-xs text-muted-foreground mt-1">Hard</p>
-                    </div>
-                  </div>
-                </>
-              )}
+                  </>
+                )}
+              </div>
 
               {/* Button */}
               <Button
@@ -253,21 +255,36 @@ const DSASection = () => {
           {/* GeeksforGeeks Card */}
           <motion.div
             variants={cardVariants}
-            className="glass-card glass-card-hover p-6 rounded-2xl relative overflow-hidden group"
+            className="glass-card glass-card-hover p-6 rounded-2xl relative overflow-hidden group flex flex-col"
           >
             {/* Glow effect */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#2F8D46]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-            <div className="relative z-10">
+            <div className="relative z-10 flex flex-col flex-1">
               {/* Header */}
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-[#2F8D46]/10 flex items-center justify-center">
                   <svg
-                    viewBox="0 0 24 24"
+                    viewBox="0 0 48 48"
                     className="w-7 h-7"
-                    fill="#2F8D46"
+                    fill="none"
                   >
-                    <path d="M21.45 14.315c-.143.28-.334.532-.565.745a3.691 3.691 0 0 1-1.104.695 4.51 4.51 0 0 1-3.116-.016 3.79 3.79 0 0 1-2.135-2.078 3.571 3.571 0 0 1-.292-.906c-.009-.042-.017-.085-.022-.128h3.305a1.108 1.108 0 0 0 1.104-1.104v-.222a1.108 1.108 0 0 0-1.104-1.104h-3.343c.023-.335.078-.668.164-.992.368-1.377 1.404-2.476 2.739-2.905a4.52 4.52 0 0 1 3.102.012c.428.147.827.358 1.176.619.349.26.651.575.889.932l.126.193a1.108 1.108 0 0 0 1.543.29 1.108 1.108 0 0 0 .29-1.543l-.126-.193a5.945 5.945 0 0 0-1.198-1.251 6.127 6.127 0 0 0-1.578-.832 6.747 6.747 0 0 0-4.63-.017c-2.008.639-3.535 2.277-4.045 4.33a5.927 5.927 0 0 0-.163 1.362h-1.36a5.928 5.928 0 0 0-.163-1.362c-.51-2.053-2.037-3.691-4.045-4.33a6.747 6.747 0 0 0-4.63.017 6.128 6.128 0 0 0-1.578.832 5.946 5.946 0 0 0-1.198 1.251l-.126.193a1.108 1.108 0 0 0 .29 1.543 1.108 1.108 0 0 0 1.543-.29l.126-.193c.238-.357.54-.672.889-.932.349-.261.748-.472 1.176-.619a4.52 4.52 0 0 1 3.102-.012c1.335.43 2.371 1.528 2.739 2.905.086.324.141.657.164.992H5.478a1.108 1.108 0 0 0-1.104 1.104v.222a1.108 1.108 0 0 0 1.104 1.104h3.305c-.005.043-.013.086-.022.128a3.571 3.571 0 0 1-.292.906 3.79 3.79 0 0 1-2.135 2.078 4.51 4.51 0 0 1-3.116.016 3.691 3.691 0 0 1-1.104-.695 3.348 3.348 0 0 1-.565-.745l-.193-.361a1.108 1.108 0 0 0-1.481-.481 1.108 1.108 0 0 0-.481 1.481l.193.361a5.608 5.608 0 0 0 .958 1.262 5.94 5.94 0 0 0 1.482.933c.556.26 1.149.443 1.762.543a6.693 6.693 0 0 0 1.93.026 6.57 6.57 0 0 0 1.873-.584 5.94 5.94 0 0 0 1.482-.933 5.609 5.609 0 0 0 .958-1.262c.147-.277.272-.565.373-.862a5.93 5.93 0 0 0 .248-.926h1.36c.05.313.132.62.248.926.101.297.226.585.373.862a5.608 5.608 0 0 0 .958 1.262 5.94 5.94 0 0 0 1.482.933 6.57 6.57 0 0 0 1.873.584 6.693 6.693 0 0 0 1.93-.026 6.174 6.174 0 0 0 1.762-.543 5.94 5.94 0 0 0 1.482-.933 5.608 5.608 0 0 0 .958-1.262l.193-.361a1.108 1.108 0 0 0-.481-1.481 1.108 1.108 0 0 0-1.481.481z" />
+                    <path
+                      d="M29.035 15.15c-2.464 0-4.464 1.973-4.464 4.406s2 4.405 4.464 4.405c2.465 0 4.464-1.972 4.464-4.405 0-2.433-2-4.405-4.464-4.405Zm0 6.66c-1.253 0-2.27-1.01-2.27-2.255s1.017-2.254 2.27-2.254 2.27 1.01 2.27 2.254-1.017 2.254-2.27 2.254Z"
+                      fill="#2F8D46"
+                    />
+                    <path
+                      d="M38.085 23.96c2.666-2.48 4.314-6.02 4.314-9.946 0-7.494-6.09-13.564-13.56-13.564-6.175 0-11.375 4.12-13.028 9.76h2.31c1.564-4.37 5.77-7.5 10.718-7.5 6.27 0 11.366 5.08 11.366 11.303 0 4.096-2.177 7.69-5.44 9.7v.004a1.093 1.093 0 0 0 1.157 1.855 1.09 1.09 0 0 0 .397-.299 13.537 13.537 0 0 0 1.766-1.312Z"
+                      fill="#2F8D46"
+                    />
+                    <path
+                      d="M19.035 23.96c-2.666 2.48-4.314 6.02-4.314 9.946 0 7.494 6.09 13.564 13.56 13.564 6.175 0 11.375-4.12 13.028-9.76h-2.31c-1.564 4.37-5.77 7.5-10.718 7.5-6.27 0-11.366-5.08-11.366-11.304 0-4.095 2.177-7.69 5.44-9.7v-.003a1.093 1.093 0 0 0-1.157-1.855 1.09 1.09 0 0 0-.397.299 13.537 13.537 0 0 0-1.766 1.312Z"
+                      fill="#2F8D46"
+                    />
+                    <path
+                      d="M18.965 28.35c2.464 0 4.464-1.973 4.464-4.406s-2-4.405-4.464-4.405c-2.465 0-4.464 1.972-4.464 4.405 0 2.433 2 4.405 4.464 4.405Zm0-6.66c1.253 0 2.27 1.01 2.27 2.255s-1.017 2.254-2.27 2.254-2.27-1.01-2.27-2.254 1.017-2.254 2.27-2.254Z"
+                      fill="#2F8D46"
+                    />
                   </svg>
                 </div>
                 <div>
@@ -276,20 +293,40 @@ const DSASection = () => {
                 </div>
               </div>
 
-              {/* GFG Stats Badge */}
-              <div className="flex flex-col items-center justify-center py-6 mb-6 rounded-xl bg-muted/10 border border-border/50">
-                <div className="flex items-center gap-2 mb-4">
-                  <Target className="w-5 h-5 text-[#2F8D46]" />
-                  <span className="text-sm text-muted-foreground">Coding Score & Stats</span>
+              {/* Stats - matching LeetCode structure */}
+              <div className="flex-1">
+                {/* Total Solved */}
+                <div className="text-center py-4 mb-4 rounded-xl bg-muted/10 border border-border/50">
+                  <div className="flex items-center justify-center gap-2 mb-1">
+                    <Trophy className="w-5 h-5 text-[#2F8D46]" />
+                    <span className="text-sm text-muted-foreground">Problems Solved</span>
+                  </div>
+                  <span className="text-4xl font-bold text-[#2F8D46]">
+                    <CountUp end={180} />
+                  </span>
                 </div>
-                
-                {/* GFG Stats Card Image */}
-                <img
-                  src={`https://geeks-for-geeks-stats-card.vercel.app/?username=${GFG_USERNAME}`}
-                  alt="GeeksforGeeks Stats"
-                  className="max-w-full h-auto rounded-lg"
-                  loading="lazy"
-                />
+
+                {/* Breakdown */}
+                <div className="grid grid-cols-3 gap-3 mb-6">
+                  <div className="text-center p-3 rounded-xl bg-green-500/10 border border-green-500/20">
+                    <span className="text-2xl font-bold text-green-400">
+                      <CountUp end={95} />
+                    </span>
+                    <p className="text-xs text-muted-foreground mt-1">Easy</p>
+                  </div>
+                  <div className="text-center p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
+                    <span className="text-2xl font-bold text-yellow-400">
+                      <CountUp end={70} />
+                    </span>
+                    <p className="text-xs text-muted-foreground mt-1">Medium</p>
+                  </div>
+                  <div className="text-center p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+                    <span className="text-2xl font-bold text-red-400">
+                      <CountUp end={15} />
+                    </span>
+                    <p className="text-xs text-muted-foreground mt-1">Hard</p>
+                  </div>
+                </div>
               </div>
 
               {/* Button */}
