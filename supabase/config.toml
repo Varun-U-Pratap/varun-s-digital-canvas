@@ -1,7 +1,0 @@
-project_id = "rkfszybefmzhbqkbgwis"
-
-[functions.gfg-stats]
-verify_jwt = false
-
-[functions.leetcode-stats]
-verify_jwt = false
