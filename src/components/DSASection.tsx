@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { ExternalLink, Code2, Trophy, Zap } from "lucide-react";
+import { ExternalLink, Code2, Trophy, Zap, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 
 const LEETCODE_USERNAME = "upratapvarun";
 const GFG_USERNAME = "upratapim33";
 
-const CACHE_KEY = "leetcode_stats_cache";
+const LEETCODE_CACHE_KEY = "leetcode_stats_cache";
+const GFG_CACHE_KEY = "gfg_stats_cache";
 const CACHE_DURATION = 60 * 60 * 1000; // 1 hour in ms
 
 interface LeetCodeStats {
@@ -18,8 +20,19 @@ interface LeetCodeStats {
   ranking: number;
 }
 
-interface CachedData {
-  data: LeetCodeStats;
+interface GFGStats {
+  platform: string;
+  totalSolved: number;
+  easy: number;
+  medium: number;
+  hard: number;
+  lastUpdated: string;
+  stale?: boolean;
+  error?: string;
+}
+
+interface CachedData<T> {
+  data: T;
   timestamp: number;
 }
 
@@ -48,20 +61,24 @@ const CountUp = ({ end, duration = 2 }: { end: number; duration?: number }) => {
 
 const DSASection = () => {
   const [leetCodeStats, setLeetCodeStats] = useState<LeetCodeStats | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [gfgStats, setGfgStats] = useState<GFGStats | null>(null);
+  const [leetCodeLoading, setLeetCodeLoading] = useState(true);
+  const [gfgLoading, setGfgLoading] = useState(true);
+  const [leetCodeError, setLeetCodeError] = useState(false);
+  const [gfgError, setGfgError] = useState(false);
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
+  // Fetch LeetCode stats
   useEffect(() => {
     const fetchLeetCodeStats = async () => {
       // Check cache first
-      const cached = localStorage.getItem(CACHE_KEY);
+      const cached = localStorage.getItem(LEETCODE_CACHE_KEY);
       if (cached) {
-        const parsedCache: CachedData = JSON.parse(cached);
+        const parsedCache: CachedData<LeetCodeStats> = JSON.parse(cached);
         if (Date.now() - parsedCache.timestamp < CACHE_DURATION) {
           setLeetCodeStats(parsedCache.data);
-          setLoading(false);
+          setLeetCodeLoading(false);
           return;
         }
       }
@@ -86,19 +103,76 @@ const DSASection = () => {
 
         // Cache the result
         localStorage.setItem(
-          CACHE_KEY,
+          LEETCODE_CACHE_KEY,
           JSON.stringify({ data: stats, timestamp: Date.now() })
         );
 
         setLeetCodeStats(stats);
       } catch (err) {
-        setError(true);
+        setLeetCodeError(true);
       } finally {
-        setLoading(false);
+        setLeetCodeLoading(false);
       }
     };
 
     fetchLeetCodeStats();
+  }, []);
+
+  // Fetch GFG stats from Edge Function
+  useEffect(() => {
+    const fetchGFGStats = async () => {
+      // Check cache first
+      const cached = localStorage.getItem(GFG_CACHE_KEY);
+      if (cached) {
+        const parsedCache: CachedData<GFGStats> = JSON.parse(cached);
+        if (Date.now() - parsedCache.timestamp < CACHE_DURATION) {
+          setGfgStats(parsedCache.data);
+          setGfgLoading(false);
+          return;
+        }
+      }
+
+      try {
+        const { data, error } = await supabase.functions.invoke('gfg-stats');
+        
+        if (error) throw error;
+
+        const stats: GFGStats = {
+          platform: data.platform || "GeeksforGeeks",
+          totalSolved: data.totalSolved || 0,
+          easy: data.easy || 0,
+          medium: data.medium || 0,
+          hard: data.hard || 0,
+          lastUpdated: data.lastUpdated || new Date().toISOString(),
+          stale: data.stale,
+          error: data.error,
+        };
+
+        // Cache the result
+        localStorage.setItem(
+          GFG_CACHE_KEY,
+          JSON.stringify({ data: stats, timestamp: Date.now() })
+        );
+
+        setGfgStats(stats);
+      } catch (err) {
+        console.error("Error fetching GFG stats:", err);
+        // Fallback data
+        setGfgStats({
+          platform: "GeeksforGeeks",
+          totalSolved: 20,
+          easy: 18,
+          medium: 2,
+          hard: 0,
+          lastUpdated: new Date().toISOString(),
+          error: "Failed to load live data"
+        });
+      } finally {
+        setGfgLoading(false);
+      }
+    };
+
+    fetchGFGStats();
   }, []);
 
   const containerVariants = {
@@ -182,7 +256,7 @@ const DSASection = () => {
 
               {/* Stats */}
               <div className="flex-1">
-                {loading ? (
+                {leetCodeLoading ? (
                   <div className="space-y-4 animate-pulse">
                     <div className="h-16 bg-muted/20 rounded-lg" />
                     <div className="grid grid-cols-3 gap-3">
@@ -191,7 +265,7 @@ const DSASection = () => {
                       <div className="h-20 bg-muted/20 rounded-lg" />
                     </div>
                   </div>
-                ) : error ? (
+                ) : leetCodeError ? (
                   <div className="text-center py-8">
                     <p className="text-muted-foreground mb-2">Unable to load stats</p>
                     <p className="text-sm text-muted-foreground/60">Please check back later</p>
@@ -293,40 +367,64 @@ const DSASection = () => {
                 </div>
               </div>
 
-              {/* Stats - matching LeetCode structure */}
+              {/* Stats - Live from Edge Function */}
               <div className="flex-1">
-                {/* Total Solved */}
-                <div className="text-center py-4 mb-4 rounded-xl bg-muted/10 border border-border/50">
-                  <div className="flex items-center justify-center gap-2 mb-1">
-                    <Trophy className="w-5 h-5 text-[#2F8D46]" />
-                    <span className="text-sm text-muted-foreground">Problems Solved</span>
+                {gfgLoading ? (
+                  <div className="space-y-4 animate-pulse">
+                    <div className="h-16 bg-muted/20 rounded-lg" />
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="h-20 bg-muted/20 rounded-lg" />
+                      <div className="h-20 bg-muted/20 rounded-lg" />
+                      <div className="h-20 bg-muted/20 rounded-lg" />
+                    </div>
                   </div>
-                  <span className="text-4xl font-bold text-[#2F8D46]">
-                    <CountUp end={20} />
-                  </span>
-                </div>
+                ) : (
+                  <>
+                    {/* Total Solved */}
+                    <div className="text-center py-4 mb-4 rounded-xl bg-muted/10 border border-border/50">
+                      <div className="flex items-center justify-center gap-2 mb-1">
+                        <Trophy className="w-5 h-5 text-[#2F8D46]" />
+                        <span className="text-sm text-muted-foreground">Problems Solved</span>
+                      </div>
+                      <span className="text-4xl font-bold text-[#2F8D46]">
+                        <CountUp end={gfgStats?.totalSolved || 0} />
+                      </span>
+                    </div>
 
-                {/* Breakdown */}
-                <div className="grid grid-cols-3 gap-3 mb-6">
-                  <div className="text-center p-3 rounded-xl bg-green-500/10 border border-green-500/20">
-                    <span className="text-2xl font-bold text-green-400">
-                      <CountUp end={18} />
-                    </span>
-                    <p className="text-xs text-muted-foreground mt-1">Easy</p>
-                  </div>
-                  <div className="text-center p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
-                    <span className="text-2xl font-bold text-yellow-400">
-                      <CountUp end={2} />
-                    </span>
-                    <p className="text-xs text-muted-foreground mt-1">Medium</p>
-                  </div>
-                  <div className="text-center p-3 rounded-xl bg-red-500/10 border border-red-500/20">
-                    <span className="text-2xl font-bold text-red-400">
-                      <CountUp end={0} />
-                    </span>
-                    <p className="text-xs text-muted-foreground mt-1">Hard</p>
-                  </div>
-                </div>
+                    {/* Breakdown */}
+                    <div className="grid grid-cols-3 gap-3 mb-4">
+                      <div className="text-center p-3 rounded-xl bg-green-500/10 border border-green-500/20">
+                        <span className="text-2xl font-bold text-green-400">
+                          <CountUp end={gfgStats?.easy || 0} />
+                        </span>
+                        <p className="text-xs text-muted-foreground mt-1">Easy</p>
+                      </div>
+                      <div className="text-center p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
+                        <span className="text-2xl font-bold text-yellow-400">
+                          <CountUp end={gfgStats?.medium || 0} />
+                        </span>
+                        <p className="text-xs text-muted-foreground mt-1">Medium</p>
+                      </div>
+                      <div className="text-center p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+                        <span className="text-2xl font-bold text-red-400">
+                          <CountUp end={gfgStats?.hard || 0} />
+                        </span>
+                        <p className="text-xs text-muted-foreground mt-1">Hard</p>
+                      </div>
+                    </div>
+
+                    {/* Last Updated */}
+                    {gfgStats?.lastUpdated && (
+                      <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground/60 mb-2">
+                        <RefreshCw className="w-3 h-3" />
+                        <span>
+                          Updated: {new Date(gfgStats.lastUpdated).toLocaleString()}
+                        </span>
+                        {gfgStats.stale && <span className="text-yellow-500">(cached)</span>}
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
 
               {/* Button */}
