@@ -152,17 +152,17 @@ const DSASection = () => {
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto"
+          className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto items-stretch"
         >
           {/* LeetCode Card */}
           <motion.div
             variants={cardVariants}
-            className="glass-card glass-card-hover p-6 rounded-2xl relative overflow-hidden group"
+            className="glass-card glass-card-hover p-6 rounded-2xl relative overflow-hidden group flex flex-col"
           >
             {/* Glow effect */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#FFA116]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-            <div className="relative z-10">
+            <div className="relative z-10 flex flex-col flex-1">
               {/* Header */}
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-[#FFA116]/10 flex items-center justify-center">
@@ -181,56 +181,58 @@ const DSASection = () => {
               </div>
 
               {/* Stats */}
-              {loading ? (
-                <div className="space-y-4 animate-pulse">
-                  <div className="h-16 bg-muted/20 rounded-lg" />
-                  <div className="grid grid-cols-3 gap-3">
-                    <div className="h-20 bg-muted/20 rounded-lg" />
-                    <div className="h-20 bg-muted/20 rounded-lg" />
-                    <div className="h-20 bg-muted/20 rounded-lg" />
-                  </div>
-                </div>
-              ) : error ? (
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground mb-2">Unable to load stats</p>
-                  <p className="text-sm text-muted-foreground/60">Please check back later</p>
-                </div>
-              ) : leetCodeStats && (
-                <>
-                  {/* Total Solved */}
-                  <div className="text-center py-4 mb-4 rounded-xl bg-muted/10 border border-border/50">
-                    <div className="flex items-center justify-center gap-2 mb-1">
-                      <Trophy className="w-5 h-5 text-[#FFA116]" />
-                      <span className="text-sm text-muted-foreground">Problems Solved</span>
+              <div className="flex-1 flex flex-col">
+                {loading ? (
+                  <div className="space-y-4 animate-pulse flex-1">
+                    <div className="h-16 bg-muted/20 rounded-lg" />
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="h-20 bg-muted/20 rounded-lg" />
+                      <div className="h-20 bg-muted/20 rounded-lg" />
+                      <div className="h-20 bg-muted/20 rounded-lg" />
                     </div>
-                    <span className="text-4xl font-bold gradient-text">
-                      <CountUp end={leetCodeStats.totalSolved} />
-                    </span>
                   </div>
+                ) : error ? (
+                  <div className="text-center py-8 flex-1 flex flex-col justify-center">
+                    <p className="text-muted-foreground mb-2">Unable to load stats</p>
+                    <p className="text-sm text-muted-foreground/60">Please check back later</p>
+                  </div>
+                ) : leetCodeStats && (
+                  <div className="flex-1">
+                    {/* Total Solved */}
+                    <div className="text-center py-4 mb-4 rounded-xl bg-muted/10 border border-border/50">
+                      <div className="flex items-center justify-center gap-2 mb-1">
+                        <Trophy className="w-5 h-5 text-[#FFA116]" />
+                        <span className="text-sm text-muted-foreground">Problems Solved</span>
+                      </div>
+                      <span className="text-4xl font-bold gradient-text">
+                        <CountUp end={leetCodeStats.totalSolved} />
+                      </span>
+                    </div>
 
-                  {/* Breakdown */}
-                  <div className="grid grid-cols-3 gap-3 mb-6">
-                    <div className="text-center p-3 rounded-xl bg-green-500/10 border border-green-500/20">
-                      <span className="text-2xl font-bold text-green-400">
-                        <CountUp end={leetCodeStats.easySolved} />
-                      </span>
-                      <p className="text-xs text-muted-foreground mt-1">Easy</p>
-                    </div>
-                    <div className="text-center p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
-                      <span className="text-2xl font-bold text-yellow-400">
-                        <CountUp end={leetCodeStats.mediumSolved} />
-                      </span>
-                      <p className="text-xs text-muted-foreground mt-1">Medium</p>
-                    </div>
-                    <div className="text-center p-3 rounded-xl bg-red-500/10 border border-red-500/20">
-                      <span className="text-2xl font-bold text-red-400">
-                        <CountUp end={leetCodeStats.hardSolved} />
-                      </span>
-                      <p className="text-xs text-muted-foreground mt-1">Hard</p>
+                    {/* Breakdown */}
+                    <div className="grid grid-cols-3 gap-3 mb-6">
+                      <div className="text-center p-3 rounded-xl bg-green-500/10 border border-green-500/20">
+                        <span className="text-2xl font-bold text-green-400">
+                          <CountUp end={leetCodeStats.easySolved} />
+                        </span>
+                        <p className="text-xs text-muted-foreground mt-1">Easy</p>
+                      </div>
+                      <div className="text-center p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/20">
+                        <span className="text-2xl font-bold text-yellow-400">
+                          <CountUp end={leetCodeStats.mediumSolved} />
+                        </span>
+                        <p className="text-xs text-muted-foreground mt-1">Medium</p>
+                      </div>
+                      <div className="text-center p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+                        <span className="text-2xl font-bold text-red-400">
+                          <CountUp end={leetCodeStats.hardSolved} />
+                        </span>
+                        <p className="text-xs text-muted-foreground mt-1">Hard</p>
+                      </div>
                     </div>
                   </div>
-                </>
-              )}
+                )}
+              </div>
 
               {/* Button */}
               <Button
@@ -253,12 +255,12 @@ const DSASection = () => {
           {/* GeeksforGeeks Card */}
           <motion.div
             variants={cardVariants}
-            className="glass-card glass-card-hover p-6 rounded-2xl relative overflow-hidden group"
+            className="glass-card glass-card-hover p-6 rounded-2xl relative overflow-hidden group flex flex-col"
           >
             {/* Glow effect */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#2F8D46]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-            <div className="relative z-10">
+            <div className="relative z-10 flex flex-col flex-1">
               {/* Header */}
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-[#2F8D46]/10 flex items-center justify-center">
@@ -277,19 +279,21 @@ const DSASection = () => {
               </div>
 
               {/* GFG Stats Badge */}
-              <div className="flex flex-col items-center justify-center py-6 mb-6 rounded-xl bg-muted/10 border border-border/50">
-                <div className="flex items-center gap-2 mb-4">
-                  <Target className="w-5 h-5 text-[#2F8D46]" />
-                  <span className="text-sm text-muted-foreground">Coding Score & Stats</span>
+              <div className="flex-1 flex flex-col">
+                <div className="flex flex-col items-center justify-center py-6 mb-6 rounded-xl bg-muted/10 border border-border/50 flex-1">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Target className="w-5 h-5 text-[#2F8D46]" />
+                    <span className="text-sm text-muted-foreground">Coding Score & Stats</span>
+                  </div>
+                  
+                  {/* GFG Stats Card Image */}
+                  <img
+                    src={`https://geeks-for-geeks-stats-card.vercel.app/?username=${GFG_USERNAME}`}
+                    alt="GeeksforGeeks Stats"
+                    className="max-w-full h-auto rounded-lg"
+                    loading="lazy"
+                  />
                 </div>
-                
-                {/* GFG Stats Card Image */}
-                <img
-                  src={`https://geeks-for-geeks-stats-card.vercel.app/?username=${GFG_USERNAME}`}
-                  alt="GeeksforGeeks Stats"
-                  className="max-w-full h-auto rounded-lg"
-                  loading="lazy"
-                />
               </div>
 
               {/* Button */}
