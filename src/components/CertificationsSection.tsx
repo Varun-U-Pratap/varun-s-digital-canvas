@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Award, GraduationCap, X } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import cs50xCert from "@/assets/certificates/cs50x.png";
 import cs50pCert from "@/assets/certificates/cs50p.png";
@@ -42,7 +43,14 @@ const CertificationsSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [selectedCert, setSelectedCert] = useState<typeof certifications[0] | null>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
+  // Reset image loaded state when dialog opens with new certificate
+  useEffect(() => {
+    if (selectedCert) {
+      setImageLoaded(false);
+    }
+  }, [selectedCert]);
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -144,15 +152,50 @@ const CertificationsSection = () => {
           </button>
           {selectedCert && (
             <div className="relative w-full">
-              <img
+              {/* Loading Skeleton */}
+              {!imageLoaded && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="w-full aspect-[4/3] rounded-lg overflow-hidden"
+                >
+                  <Skeleton className="w-full h-full bg-muted/50" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="flex flex-col items-center gap-3">
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full"
+                      />
+                      <span className="text-sm text-muted-foreground">Loading certificate...</span>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+              
+              {/* Actual Image */}
+              <motion.img
                 src={selectedCert.image}
                 alt={`${selectedCert.title} Certificate`}
-                className="w-full h-auto rounded-lg shadow-2xl"
+                className={`w-full h-auto rounded-lg shadow-2xl transition-opacity duration-300 ${
+                  imageLoaded ? "opacity-100" : "opacity-0 absolute top-0 left-0"
+                }`}
+                onLoad={() => setImageLoaded(true)}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={imageLoaded ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
               />
-              <div className="mt-4 text-center">
+              
+              <motion.div 
+                className="mt-4 text-center"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: imageLoaded ? 1 : 0, y: imageLoaded ? 0 : 10 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+              >
                 <h3 className="text-lg font-semibold">{selectedCert.title}</h3>
                 <p className="text-sm text-muted-foreground">{selectedCert.institution}</p>
-              </div>
+              </motion.div>
             </div>
           )}
         </DialogContent>
