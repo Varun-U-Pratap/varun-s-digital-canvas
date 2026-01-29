@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { Award, GraduationCap, X } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import cs50xCert from "@/assets/certificates/cs50x.png";
@@ -144,58 +144,45 @@ const CertificationsSection = () => {
           <DialogTitle className="sr-only">
             {selectedCert?.title} Certificate
           </DialogTitle>
+          <DialogDescription className="sr-only">
+            Viewing certificate from {selectedCert?.institution}
+          </DialogDescription>
           <button
             onClick={() => setSelectedCert(null)}
             className="absolute right-3 top-3 z-10 p-2 rounded-full bg-background/80 hover:bg-background transition-colors"
+            aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
           </button>
           {selectedCert && (
             <div className="relative w-full">
-              {/* Loading Skeleton */}
+              {/* Loading Skeleton - simplified for faster rendering */}
               {!imageLoaded && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="w-full aspect-[4/3] rounded-lg overflow-hidden"
-                >
-                  <Skeleton className="w-full h-full bg-muted/50" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="flex flex-col items-center gap-3">
-                      <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                        className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full"
-                      />
-                      <span className="text-sm text-muted-foreground">Loading certificate...</span>
-                    </div>
+                <div className="w-full aspect-[4/3] rounded-lg overflow-hidden bg-muted/30 flex items-center justify-center">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                    <span className="text-sm text-muted-foreground">Loading...</span>
                   </div>
-                </motion.div>
+                </div>
               )}
               
               {/* Actual Image */}
-              <motion.img
+              <img
                 src={selectedCert.image}
                 alt={`${selectedCert.title} Certificate`}
-                className={`w-full h-auto rounded-lg shadow-2xl transition-opacity duration-300 ${
+                className={`w-full h-auto rounded-lg shadow-2xl transition-all duration-200 ${
                   imageLoaded ? "opacity-100" : "opacity-0 absolute top-0 left-0"
                 }`}
                 onLoad={() => setImageLoaded(true)}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={imageLoaded ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
+                loading="eager"
               />
               
-              <motion.div 
-                className="mt-4 text-center"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: imageLoaded ? 1 : 0, y: imageLoaded ? 0 : 10 }}
-                transition={{ duration: 0.3, delay: 0.1 }}
-              >
-                <h3 className="text-lg font-semibold">{selectedCert.title}</h3>
-                <p className="text-sm text-muted-foreground">{selectedCert.institution}</p>
-              </motion.div>
+              {imageLoaded && (
+                <div className="mt-4 text-center">
+                  <h3 className="text-lg font-semibold">{selectedCert.title}</h3>
+                  <p className="text-sm text-muted-foreground">{selectedCert.institution}</p>
+                </div>
+              )}
             </div>
           )}
         </DialogContent>
