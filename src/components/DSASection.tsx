@@ -292,6 +292,7 @@ const DSASection = () => {
                     alt="GeeksforGeeks Stats"
                     className="max-w-full h-auto rounded-lg"
                     loading="lazy"
+                    decoding="async"
                   />
                 </div>
               </div>
