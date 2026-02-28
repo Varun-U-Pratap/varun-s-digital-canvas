@@ -65,9 +65,16 @@
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Plus Jakarta Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -77,22 +84,52 @@
   code, pre {
     font-family: 'JetBrains Mono', monospace;
   }
+
+  /* Smooth transitions for all interactive elements */
+  a, button {
+    @apply transition-colors duration-200;
+  }
+
+  /* Better image rendering */
+  img {
+    @apply max-w-full h-auto;
+    image-rendering: -webkit-optimize-contrast;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground));
+  }
 }
 
 @layer components {
   .glass-card {
     @apply bg-card/60 backdrop-blur-xl border border-border/50 rounded-xl;
     box-shadow: var(--shadow-card);
+    will-change: transform;
   }
 
   .glass-card-hover {
-    @apply glass-card transition-all duration-500;
+    @apply glass-card transition-all duration-300 ease-out;
   }
 
   .glass-card-hover:hover {
     @apply border-primary/30;
     box-shadow: var(--shadow-hover);
-    transform: translateY(-4px);
+    transform: translateY(-2px);
   }
 
   .gradient-text {

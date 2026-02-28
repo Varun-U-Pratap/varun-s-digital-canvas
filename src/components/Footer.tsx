@@ -57,8 +57,8 @@ const Footer = () => {
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>Made with</span>
             <motion.div
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 1, repeat: Infinity }}
+              animate={{ scale: [1, 1.15, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
               <Heart className="w-4 h-4 text-red-500 fill-red-500" />
             </motion.div>
