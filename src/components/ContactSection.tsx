@@ -31,15 +31,23 @@ const ContactSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Build mailto link with form data
+    const subject = encodeURIComponent(`Portfolio Contact from ${formData.name}`);
+    const body = encodeURIComponent(
+      `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+    );
+    
+    // Small delay for UX feedback
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    
+    window.open(`mailto:varunupratap@gmail.com?subject=${subject}&body=${body}`, "_self");
     
     setIsSubmitting(false);
     setIsSubmitted(true);
     
     toast({
-      title: "Message sent!",
-      description: "Thank you for reaching out. I'll get back to you soon.",
+      title: "Opening email client!",
+      description: "Your message details have been pre-filled in your email client.",
     });
     
     // Reset after animation
