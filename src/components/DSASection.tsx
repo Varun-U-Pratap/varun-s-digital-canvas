@@ -68,19 +68,17 @@ const DSASection = () => {
 
       try {
         const response = await fetch(
-          `https://leetcode-stats-api.herokuapp.com/${LEETCODE_USERNAME}`
+          `https://alfa-leetcode-api.onrender.com/userProfile/${LEETCODE_USERNAME}`
         );
         if (!response.ok) throw new Error("Failed to fetch");
         const data = await response.json();
-        
-        if (data.status === "error") throw new Error("API error");
 
         const stats: LeetCodeStats = {
           totalSolved: data.totalSolved || 0,
           easySolved: data.easySolved || 0,
           mediumSolved: data.mediumSolved || 0,
           hardSolved: data.hardSolved || 0,
-          acceptanceRate: data.acceptanceRate || 0,
+          acceptanceRate: parseFloat(data.acceptanceRate) || 0,
           ranking: data.ranking || 0,
         };
 
