@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { ExternalLink, Code2, Trophy, Target, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 
 const LEETCODE_USERNAME = "upratapvarun";
 const GFG_USERNAME = "upratapim33";
@@ -67,18 +68,18 @@ const DSASection = () => {
       }
 
       try {
-        const response = await fetch(
-          `https://alfa-leetcode-api.onrender.com/userProfile/${LEETCODE_USERNAME}`
-        );
-        if (!response.ok) throw new Error("Failed to fetch");
-        const data = await response.json();
+        const { data, error: fnError } = await supabase.functions.invoke("leetcode-stats", {
+          body: { username: LEETCODE_USERNAME },
+        });
+
+        if (fnError || data?.error) throw new Error("Failed to fetch");
 
         const stats: LeetCodeStats = {
           totalSolved: data.totalSolved || 0,
           easySolved: data.easySolved || 0,
           mediumSolved: data.mediumSolved || 0,
           hardSolved: data.hardSolved || 0,
-          acceptanceRate: parseFloat(data.acceptanceRate) || 0,
+          acceptanceRate: 0,
           ranking: data.ranking || 0,
         };
 
