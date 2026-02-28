@@ -91,9 +91,12 @@ const Navbar = () => {
               variant="outline"
               size="sm"
               className="border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground gap-2"
+              asChild
             >
-              <Download className="w-4 h-4" />
-              Resume
+              <a href="/resume.pdf" download="Varun_Resume.pdf">
+                <Download className="w-4 h-4" />
+                Resume
+              </a>
             </Button>
           </div>
 
@@ -133,9 +136,12 @@ const Navbar = () => {
                 variant="outline"
                 size="sm"
                 className="w-full border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground gap-2"
+                asChild
               >
-                <Download className="w-4 h-4" />
-                Resume
+                <a href="/resume.pdf" download="Varun_Resume.pdf">
+                  <Download className="w-4 h-4" />
+                  Resume
+                </a>
               </Button>
             </div>
           </motion.div>
